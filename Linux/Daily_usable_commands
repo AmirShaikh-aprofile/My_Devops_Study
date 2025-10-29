@@ -1,0 +1,251 @@
+🧩 1. System Basics & User Management
+
+Goal: Refresh basic and multi-user management for multi-node setups.
+
+Tasks:
+
+Create users and groups, assign permissions.
+
+Add user to multiple groups.
+
+Lock/unlock accounts, check last login.
+
+Configure password expiry policy.
+
+Commands:
+# User and group management
+useradd devopsuser
+passwd devopsuser
+usermod -aG wheel devopsuser
+id devopsuser
+groups devopsuser
+chage -l devopsuser
+
+# Lock/unlock
+passwd -l devopsuser
+passwd -u devopsuser
+lastlog
+
+📂 2. File System & Permissions
+
+Goal: Understand Linux permissions, sticky bits, ACLs (often asked).
+
+Tasks:
+
+Create files, directories, test chmod, chown, setfacl.
+
+Apply sticky bit to shared directories.
+
+Commands:
+mkdir /data/devops
+touch /data/devops/file1
+chmod 775 /data/devops
+chown root:devops /data/devops
+
+# ACLs
+setfacl -m u:devopsuser:rwx /data/devops/file1
+getfacl /data/devops/file1
+
+# Sticky bit
+chmod +t /shared
+ls -ld /shared
+
+⚙️ 3. System Monitoring & Troubleshooting
+
+Goal: Practice resource and log monitoring — critical in CloudOps.
+
+Tasks:
+
+Check CPU, memory, disk, network usage.
+
+Identify top processes.
+
+Explore logs and service failures.
+
+Commands:
+top
+htop        # if installed
+free -m
+df -h
+du -sh /var/log/*
+iostat -x 1 5
+vmstat 2 5
+netstat -tulnp
+ss -tulwn
+journalctl -xeu nginx
+
+🔄 4. Systemd & Service Management
+
+Goal: Manage and debug services — frequent in interview labs.
+
+Tasks:
+
+Start/stop/restart and enable services.
+
+Create a custom service file.
+
+Commands:
+systemctl start nginx
+systemctl status nginx
+systemctl enable nginx
+systemctl disable nginx
+systemctl list-units --type=service
+
+# Create simple custom service
+cat <<EOF | sudo tee /etc/systemd/system/hello.service
+[Unit]
+Description=Simple Hello Service
+
+[Service]
+ExecStart=/usr/bin/bash -c 'while true; do echo "Hello DevOps" >> /tmp/hello.log; sleep 5; done'
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+systemctl daemon-reload
+systemctl start hello
+
+🧱 5. Networking Tasks
+
+Goal: Debug connectivity, DNS, routes, and firewalls.
+
+Tasks:
+
+Test name resolution and routes.
+
+Create firewall rules.
+
+Check open ports and active connections.
+
+Commands:
+ping google.com
+traceroute google.com
+ip addr show
+ip route show
+nmcli device status
+nslookup example.com
+curl -I https://example.com
+firewall-cmd --list-all
+firewall-cmd --add-port=8080/tcp --permanent
+firewall-cmd --reload
+
+🧰 6. Package Management (RHEL/Debian)
+
+Goal: Practice installing, updating, and managing repositories.
+
+Tasks:
+
+Install/remove packages.
+
+Create local repo (if time permits).
+
+Commands:
+# RHEL/CentOS
+yum search nginx
+yum install nginx -y
+yum remove nginx -y
+yum history
+
+# Debian/Ubuntu
+apt search nginx
+apt install nginx -y
+apt remove nginx -y
+
+🗂️ 7. Disk & Filesystem Operations
+
+Goal: Manage partitions, LVM, and mounts — often tested.
+
+Tasks:
+
+Create partition, format, mount.
+
+Setup LVM and resize.
+
+Commands:
+lsblk
+fdisk -l
+mkfs.ext4 /dev/xvdb1
+mount /dev/xvdb1 /mnt
+echo "/dev/xvdb1 /mnt ext4 defaults 0 0" >> /etc/fstab
+
+# LVM
+pvcreate /dev/xvdb
+vgcreate vg_devops /dev/xvdb
+lvcreate -n lv_data -L 1G vg_devops
+mkfs.ext4 /dev/vg_devops/lv_data
+mount /dev/vg_devops/lv_data /data
+
+🧾 8. Process Management
+
+Goal: Handle processes gracefully.
+
+Tasks:
+
+Start background jobs, kill processes.
+
+Monitor with ps, top, pmap, lsof.
+
+Commands:
+ps aux | grep nginx
+pstree -p
+kill -9 <pid>
+jobs
+bg %1
+fg %1
+lsof -i :8080
+
+🧠 9. Shell Scripting Basics
+
+Goal: Automate small tasks (used in DevOps pipelines).
+
+Tasks:
+
+Write script to monitor disk usage.
+
+Script to start/stop service and send alert.
+
+Example:
+#!/bin/bash
+threshold=80
+usage=$(df / | awk 'NR==2 {print $5}' | sed 's/%//')
+
+if [ $usage -ge $threshold ]; then
+  echo "Disk usage is high: $usage%" | mail -s "Disk Alert" admin@example.com
+fi
+
+☁️ 10. CloudOps Practice (Integration)
+
+Goal: Combine Linux skills with DevOps mindset.
+
+Tasks:
+
+Configure SSH key authentication.
+
+Copy files securely to/from servers.
+
+Setup cron for log cleanup.
+
+Use curl to test API endpoints.
+
+Commands:
+ssh-keygen -t rsa -b 4096
+ssh-copy-id user@server
+scp file.txt user@server:/tmp/
+rsync -avz /data/ user@server:/backup/
+crontab -e
+curl -s -o /dev/null -w "%{http_code}" https://api.github.com
+
+🎯 Bonus: Real-world Scenarios to Practice
+
+Service not starting: Debug using systemctl, journalctl, netstat.
+
+Disk full: Find large files, clear logs.
+
+Slow server: Use top, iotop, netstat to identify cause.
+
+SSH not working: Check sshd_config, firewall, SELinux.
+
+Automation: Create a script to deploy a web app with Nginx.
+
+Would you like me to prepare a daily 7-day Linux DevOps practice plan (e.g., “Day 1: User management + permissions,” “Day 2: Services + troubleshooting,” etc.) with command challenges and mini tasks to simulate interview labs?
