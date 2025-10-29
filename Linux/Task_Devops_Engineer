@@ -1,0 +1,185 @@
+Excellent — since you’re preparing for a CloudOps/DevOps engineer role, here’s a 5-Day Linux Practice Plan designed to refresh your admin skills and build the kind of command fluency and troubleshooting mindset interviewers expect.
+
+Each day includes:
+
+🎯 Focus Areas
+
+💻 Hands-On Tasks
+
+⚙️ Key Commands to Master
+
+🧠 Mini Challenges / Scenarios
+
+🗓️ Day 1 – User, File, and Permission Management
+
+🎯 Focus: Refresh Linux fundamentals — users, groups, permissions, and ACLs.
+
+💻 Tasks
+
+Create multiple users & groups (devops, cloud, sre).
+
+Add users to multiple groups and verify memberships.
+
+Practice permission modes (chmod, chown, chgrp).
+
+Implement sticky bits & ACLs on shared directories.
+
+Explore file ownership and umask defaults.
+
+⚙️ Key Commands
+useradd devops1
+passwd devops1
+groupadd cloud
+usermod -aG cloud devops1
+id devops1
+chmod 755 /opt/test
+chown root:cloud /opt/test
+setfacl -m u:devops1:rwx /opt/test
+getfacl /opt/test
+umask
+
+🧠 Mini Challenge
+
+Create a shared folder /projects such that multiple users can collaborate, but only the owner can delete files.
+
+🗓️ Day 2 – System Monitoring & Service Management
+
+🎯 Focus: Master service control, logs, and resource monitoring (a must-have for CloudOps).
+
+💻 Tasks
+
+Start/stop services (nginx, sshd, crond).
+
+Create a custom systemd service file.
+
+Analyze logs using journalctl, tail, grep.
+
+Monitor CPU, memory, network, and process performance.
+
+⚙️ Key Commands
+systemctl start nginx
+systemctl status nginx
+systemctl enable nginx
+journalctl -xeu nginx
+top
+htop
+vmstat 2 5
+netstat -tulnp
+ss -tulwn
+
+🧠 Mini Challenge
+
+A service won’t start after reboot. Diagnose the issue using journalctl and fix it.
+
+🗓️ Day 3 – Networking & Storage Management
+
+🎯 Focus: Build networking and filesystem confidence — both are common DevOps interview areas.
+
+💻 Tasks
+
+Inspect IPs, routes, DNS, and open ports.
+
+Test connectivity using ping, traceroute, curl.
+
+Add firewall rules (firewalld or ufw).
+
+Create, format, and mount partitions.
+
+Work with LVM — create PV, VG, LV, resize volume.
+
+⚙️ Key Commands
+ip addr show
+ip route
+ping google.com
+traceroute example.com
+nslookup openai.com
+curl -I https://example.com
+firewall-cmd --add-port=8080/tcp --permanent
+firewall-cmd --reload
+lsblk
+fdisk -l
+mkfs.ext4 /dev/xvdb1
+mount /dev/xvdb1 /mnt
+pvcreate /dev/xvdb
+vgcreate vgdata /dev/xvdb
+lvcreate -n lv1 -L 1G vgdata
+
+🧠 Mini Challenge
+
+Your app can’t reach the database host. Debug step-by-step using network tools.
+
+🗓️ Day 4 – Process Management, Automation, and Scheduling
+
+🎯 Focus: Handle process control and automate tasks with shell scripts & cron jobs.
+
+💻 Tasks
+
+List and control running processes.
+
+Use nice, renice, kill, pkill.
+
+Schedule periodic jobs with cron.
+
+Write a simple shell script for monitoring.
+
+⚙️ Key Commands
+ps aux | grep nginx
+pstree -p
+kill -9 <pid>
+jobs
+bg %1
+fg %1
+crontab -e
+
+Example Script
+#!/bin/bash
+THRESHOLD=80
+USAGE=$(df / | awk 'NR==2 {print $5}' | sed 's/%//')
+if [ $USAGE -ge $THRESHOLD ]; then
+  echo "Disk usage alert: $USAGE%" >> /var/log/disk_alert.log
+fi
+
+🧠 Mini Challenge
+
+Create a cron job that runs the above script every hour and writes the result to a log file.
+
+🗓️ Day 5 – Troubleshooting & DevOps Integration
+
+🎯 Focus: Combine all your Linux skills into real DevOps-style scenarios.
+
+💻 Tasks
+
+Enable SSH key-based authentication.
+
+Use scp or rsync to transfer files between servers.
+
+Set SELinux to permissive and observe logs.
+
+Simulate a “service down” scenario and fix it.
+
+Integrate with tools — test REST API using curl.
+
+⚙️ Key Commands
+ssh-keygen -t rsa -b 4096
+ssh-copy-id user@server
+scp file.txt user@server:/tmp/
+rsync -avz /data/ user@server:/backup/
+setenforce 0
+getenforce
+curl -s -o /dev/null -w "%{http_code}" https://api.github.com
+
+🧠 Mini Challenge
+
+Nginx is not serving the index page — diagnose using systemctl, logs, SELinux, and firewall checks.
+
+✅ Bonus Tips
+
+Practice on an AWS EC2 Linux instance or local VM (RHEL or Ubuntu).
+
+Keep a troubleshooting notebook — write down command outputs & resolutions.
+
+Combine tasks (e.g., service + firewall + SELinux issue simulation).
+
+Review /var/log/ logs daily to understand log patterns.
+
+Would you like me to create a follow-up 5-day advanced plan focusing on DevOps-specific Linux use cases (Docker, systemd unit for containers, networking namespaces, etc.) next?
